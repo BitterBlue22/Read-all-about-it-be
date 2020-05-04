@@ -7,3 +7,11 @@ exports.formatDates = (list) => {
   });
   return newList;
 };
+
+exports.makeRefObj = (list) => {
+  const lookupObj = {};
+  list.forEach((item) => {
+    lookupObj[item.article_id] = item.title;
+  });
+  return lookupObj;
+};
