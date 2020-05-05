@@ -15,3 +15,16 @@ exports.makeRefObj = (list) => {
   });
   return lookupObj;
 };
+
+exports.formatComments = (comments, articleRef) => {
+  const formattedComments = comments.map((item) => {
+    const { belongs_to, created_by, ...restOfKeys } = item;
+    const newObj = {
+      article_id: articleRef[belongs_to],
+      author: created_by,
+      ...restOfKeys,
+    };
+    return newObj;
+  });
+  return formattedComments;
+};
