@@ -1,7 +1,7 @@
 const connection = require("../db/connection");
 
 exports.fetchArticlesById = (id) => {
-  console.log("inside articles model");
+  // console.log("inside articles model");
   return connection
     .select("articles.*")
     .count("comments.article_id as comment_count")
@@ -11,5 +11,16 @@ exports.fetchArticlesById = (id) => {
     .groupBy("articles.article_id")
     .then((article) => {
       return article;
+    });
+};
+
+exports.updateArticlesById = (id, updatedInfo) => {
+  console.log("inside articles model");
+  return connection("articles")
+    .returning("*")
+    .where("article_id", id)
+    .update(updatedInfo)
+    .then((updated) => {
+      return updated;
     });
 };

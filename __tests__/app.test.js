@@ -89,6 +89,30 @@ describe("/api/articles", () => {
       });
     });
   });
+
+  describe("PATCH", () => {
+    describe("/:article_id", () => {
+      test("should ", () => {
+        return request(app)
+          .patch("/api/articles/1")
+          .send({ body: "I'M CHANGING THIS TO SOMETHING NEW!" })
+          .expect(201)
+          .then((res) => {
+            expect(res.body).toEqual([
+              {
+                article_id: 1,
+                title: "Living in the shadow of a great man",
+                body: "I'M CHANGING THIS TO SOMETHING NEW!",
+                votes: 100,
+                topic: "mitch",
+                author: "butter_bridge",
+                created_at: "2018-11-15T12:21:54.171Z",
+              },
+            ]);
+          });
+      });
+    });
+  });
 });
 describe("/api/comments", () => {
   describe("PATCH", () => {
@@ -112,4 +136,5 @@ describe("/api/comments", () => {
     });
   });
 });
+
 describe("error handlers", () => {});
