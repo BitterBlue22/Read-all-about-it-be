@@ -11,7 +11,7 @@ exports.seed = function (knex) {
   const topicsInsertions = knex("topics").insert(topicData);
   const usersInsertions = knex("users").insert(userData);
   return knex.migrate.rollback().then(() => {
-    knex.migrate.latest().then(() => {
+    return knex.migrate.latest().then(() => {
       return Promise.all([topicsInsertions, usersInsertions])
         .then(() => {
           return knex
@@ -27,3 +27,6 @@ exports.seed = function (knex) {
     });
   });
 };
+/*  LockError {
+      name: 'MigrationLocked',
+      message: 'Migration table is already locked'*/ //not sure what this is?
