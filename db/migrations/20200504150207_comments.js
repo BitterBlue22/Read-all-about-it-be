@@ -7,7 +7,7 @@ exports.up = function (knex) {
     comment.foreign("article_id").references("article_id").inTable("articles");
     comment.integer("votes").defaultTo(0);
     comment.timestamp("created_at");
-    comment.text("comments");
+    comment.text("body");
   });
 };
 
