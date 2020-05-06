@@ -19,12 +19,18 @@ exports.makeRefObj = (list) => {
 exports.formatComments = (comments, articleRef) => {
   const formattedComments = comments.map((item) => {
     const { belongs_to, created_by, ...restOfKeys } = item;
+
     const newObj = {
-      article_id: articleRef[belongs_to],
-      author: created_by,
       ...restOfKeys,
     };
+    for (key in articleRef) {
+      if (articleRef[key] === belongs_to) {
+        newObj.article_id = key;
+        newObj.author = created_by;
+      }
+    }
     return newObj;
   });
+
   return formattedComments;
 };
