@@ -15,12 +15,36 @@ exports.fetchArticlesById = (id) => {
 };
 
 exports.updateArticlesById = (id, updatedInfo) => {
-  console.log("inside articles model");
+  // console.log("inside articles model");
   return connection("articles")
     .returning("*")
     .where("article_id", id)
     .update(updatedInfo)
     .then((updated) => {
       return updated;
+    });
+};
+
+exports.fetchCommentsByArticle = (id) => {
+  // console.log("inside articles model");
+  return connection
+    .select("*")
+    .from("comments")
+    .where("article_id", id)
+    .returning("*")
+    .then((comments) => {
+      return comments;
+    });
+};
+
+exports.addCommentByArticle = (id, comment) => {
+  console.log("inside articles model");
+  return connection("comments")
+    .insert(comment)
+    .where("article_id", id)
+    .returning("*")
+    .then((post) => {
+      console.log(post, "POST");
+      return post;
     });
 };
