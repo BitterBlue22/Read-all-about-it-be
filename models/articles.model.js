@@ -25,12 +25,13 @@ exports.updateArticlesById = (id, updatedInfo) => {
     });
 };
 
-exports.fetchCommentsByArticle = (id) => {
+exports.fetchCommentsByArticle = (id, order, sort_by) => {
   // console.log("inside articles model");
   return connection
     .select("*")
     .from("comments")
     .where("article_id", id)
+    .orderBy(sort_by || "created_at", order || "desc")
     .returning("*")
     .then((comments) => {
       return comments;
@@ -38,13 +39,19 @@ exports.fetchCommentsByArticle = (id) => {
 };
 
 exports.addCommentByArticle = (id, comment) => {
-  console.log("inside articles model");
+  // console.log("inside articles model");
+  const { body } = comment;
+  const newComment = {
+    article_id: id,
+    body: body,
+    created_at: new Date(Date.now()),
+    votes: 0,
+  };
   return connection("comments")
-    .insert(comment)
+    .insert(newComment)
     .where("article_id", id)
     .returning("*")
     .then((post) => {
-      console.log(post, "POST");
       return post;
     });
 };

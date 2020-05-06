@@ -1,7 +1,7 @@
 const connection = require("../db/connection");
 
 exports.fetchUsersById = (id) => {
-  console.log("inside users model");
+  // console.log("inside users model");
   return connection
     .select("*")
     .from("users")

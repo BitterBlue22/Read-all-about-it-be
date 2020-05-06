@@ -92,7 +92,7 @@ describe("formatComments", () => {
         body:
           "The beautiful thing about treasure is that it exists. Got to find out what kind of sheets these are; not cotton, not rayon, silky.",
         comment_votes: 14,
-        article_id: 1,
+        // article_id: 1,
         created_at: new Date(1479818163389),
       },
     ];

@@ -20,15 +20,19 @@ exports.patchArticlesById = (req, res, next) => {
   // console.log("inside articles controller");
   const { article_id } = req.params;
   const { body } = req;
-  updateArticlesById(article_id, body).then((update) => {
-    res.status(201).send(update);
-  });
+  updateArticlesById(article_id, body)
+    .then((update) => {
+      res.status(201).send(update);
+    })
+    .catch((err) => {
+      next(err);
+    });
 };
 
 exports.getCommentsByArticle = (req, res, next) => {
   // console.log("inside articles controller");
   const { article_id } = req.params;
-  fetchCommentsByArticle(article_id)
+  fetchCommentsByArticle(article_id, req.query.order, req.query.sort_by)
     .then((comments) => {
       res.status(200).send({ comments: comments });
     })
@@ -38,12 +42,16 @@ exports.getCommentsByArticle = (req, res, next) => {
 };
 
 exports.postCommentsByArticle = (req, res, next) => {
-  console.log("inside articles controller");
+  // console.log("inside articles controller");
   const { article_id } = req.params;
   const { body } = req;
-  console.log(body, "BODY");
-  addCommentByArticle(article_id, body).then((comment) => {
-    console.log(comment, "COMMENT");
-    res.status(201).send({ "new comment": comment });
-  });
+
+  addCommentByArticle(article_id, body)
+    .then((comment) => {
+      comment[0].author = body.username;
+      res.status(201).send({ new_comment: comment });
+    })
+    .catch((err) => {
+      next(err);
+    });
 };
