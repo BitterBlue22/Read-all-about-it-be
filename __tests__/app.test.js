@@ -104,6 +104,70 @@ describe("/api/articles", () => {
           });
         });
     });
+    test("should default sort by date descending ", () => {
+      return request(app)
+        .get("/api/articles")
+        .expect(200)
+        .then((result) => {
+          expect(result.body.articles[0]).toEqual({
+            article_id: 1,
+            title: "Living in the shadow of a great man",
+            body: "I find this existence challenging",
+            votes: 100,
+            topic: "mitch",
+            author: "butter_bridge",
+            created_at: "2018-11-15T12:21:54.171Z",
+            comment_count: "13",
+          });
+          expect(result.body.articles[11]).toEqual({
+            article_id: 12,
+            title: "Moustache",
+            body: "Have you seen the size of that thing?",
+            votes: 0,
+            topic: "mitch",
+            author: "butter_bridge",
+            created_at: "1974-11-26T12:21:54.171Z",
+            comment_count: "0",
+          });
+        });
+    });
+    test("should be able to sort by chosen column in chosen order ", () => {
+      return request(app)
+        .get("/api/articles?sort_by=votes")
+        .expect(200)
+        .then((result) => {
+          expect(result.body.articles[0]).toEqual({
+            article_id: 1,
+            title: "Living in the shadow of a great man",
+            body: "I find this existence challenging",
+            votes: 100,
+            topic: "mitch",
+            author: "butter_bridge",
+            created_at: "2018-11-15T12:21:54.171Z",
+            comment_count: "13",
+          });
+        });
+    });
+    test("should filter results by author", () => {
+      return request(app)
+        .get("/api/articles?author=icellusedkars")
+        .expect(200)
+        .then((result) => {
+          result.body.articles.forEach((article) => {
+            expect(article.author).toEqual("icellusedkars");
+          });
+        });
+    });
+    test("should filter results by topic", () => {
+      return request(app)
+        .get("/api/articles?topic=mitch")
+        .expect(200)
+        .then((result) => {
+          result.body.articles.forEach((article) => {
+            expect(article.topic).toEqual("mitch");
+          });
+        });
+    });
     describe(":article_id", () => {
       test("should return a 200 status and the article by given id", () => {
         return request(app)
