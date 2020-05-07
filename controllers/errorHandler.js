@@ -1,12 +1,18 @@
 exports.send404 = (req, res, next) => {
   res.status(404).send({ msg: "path not found" });
 };
-
+exports.handleCustomErrors = (err, req, res, next) => {
+  if (err.status) {
+    res.status(err.status).send({ msg: err.msg });
+  } else {
+    next(err);
+  }
+};
 exports.handlePSQLErrors = (err, req, res, next) => {
-  const codes = { syntax_error: 42601 };
-  if (err.code in codes) {
-    const { status, msg } = codes[err.code];
-    res.status(status).send({ msg });
+  const codes400 = ["42601", "22P02"];
+
+  if (codes400.includes(err.code)) {
+    res.status(400).send({ msg: "bad request" });
   } else next(err);
 };
 
