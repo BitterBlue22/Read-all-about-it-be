@@ -16,7 +16,7 @@ describe("/api", () => {
         expect(res.body.msg).toEqual("responding");
       });
   });
-  test("should return 404 is given an invalid sub-path ", () => {
+  test("should return 404 if given an invalid sub-path ", () => {
     return request(app)
       .get("/api/notapath")
       .expect(404)
@@ -27,7 +27,7 @@ describe("/api", () => {
 });
 
 describe("/api/topics", () => {
-  test("should return 404 is given an invalid sub-path ", () => {
+  test("should return 404 if given an invalid sub-path ", () => {
     return request(app)
       .get("/api/topics/notapath")
       .expect(404)
@@ -50,11 +50,35 @@ describe("/api/topics", () => {
           });
         });
     });
+    test("should return a 405 status if method not allowed ", () => {
+      const invalidMethods = ["delete", "post", "patch"];
+      const requests = invalidMethods.map((method) => {
+        return request(app)
+          [method]("/api/topics")
+          .expect(405)
+          .then((res) => {
+            expect(res.body.msg).toBe("invalid method");
+          });
+      });
+      return Promise.all(requests);
+    });
   });
 });
 
 describe("/api/users", () => {
   describe("GET", () => {
+    test("should return a 405 status if method not allowed ", () => {
+      const invalidMethods = ["delete", "post"];
+      const requests = invalidMethods.map((method) => {
+        return request(app)
+          [method]("/api/users")
+          .expect(405)
+          .then((res) => {
+            expect(res.body.msg).toBe("invalid method");
+          });
+      });
+      return Promise.all(requests);
+    });
     describe(":username", () => {
       test("should return a 200 status and the user by given username", () => {
         return request(app)
@@ -71,6 +95,14 @@ describe("/api/users", () => {
                 },
               ],
             });
+          });
+      });
+      test("should return 404 if given an invalid username", () => {
+        return request(app)
+          .get("/api/topics/notapuser")
+          .expect(404)
+          .then((res) => {
+            expect(res.body.msg).toEqual("path not found");
           });
       });
     });
@@ -354,23 +386,6 @@ describe("/api/comments", () => {
       it("should delete comment by id", async () => {
         return request(app).del("/api/comments/3").expect(204);
       });
-    });
-  });
-});
-
-describe("error handlers", () => {
-  describe("405 errors", () => {
-    it("should return a 405 status if method not allowed ", () => {
-      const invalidMethods = ["delete", "post"];
-      const requests = invalidMethods.map((method) => {
-        return request(app)
-          [method]("/api/users")
-          .expect(405)
-          .then((res) => {
-            expect(res.body.msg).toBe("invalid method");
-          });
-      });
-      return Promise.all(requests);
     });
   });
 });
