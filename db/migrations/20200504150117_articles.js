@@ -7,7 +7,11 @@ exports.up = function (knex) {
     article.string("topic");
     article.foreign("topic").references("slug").inTable("topics");
     article.string("author");
-    article.foreign("author").references("username").inTable("users");
+    article
+      .foreign("author")
+      .references("username")
+      .inTable("users")
+      .onDelete("CASCADE");
     article.timestamp("created_at");
   });
 };

@@ -77,7 +77,7 @@ Each user should have:
 - `avatar_url`
 - `name`
 
-Each article should have:
+Each article should have: //relies on user//
 
 - `article_id` which is the primary key
 - `title`
@@ -87,7 +87,7 @@ Each article should have:
 - `author` field that references a user's primary key (username)
 - `created_at` defaults to the current timestamp
 
-Each comment should have:
+Each comment should have: //relies on article and user//
 
 - `comment_id` which is the primary key
 - `author` field that references a user's primary key (username)
@@ -122,27 +122,27 @@ Utilising your data manipulation skills, you will also need to complete the util
 Your server _must_ have the following endpoints:
 
 ```http
-GET /api/topics
+GET /api/topics x
 
-GET /api/users/:username
+GET /api/users/:username x
 
-GET /api/articles/:article_id
-PATCH /api/articles/:article_id
+GET /api/articles/:article_id x
+PATCH /api/articles/:article_id x
 
-POST /api/articles/:article_id/comments
-GET /api/articles/:article_id/comments
+POST /api/articles/:article_id/commentsx
+GET /api/articles/:article_id/comments x
 
-GET /api/articles
+GET /api/articles x
 
-PATCH /api/comments/:comment_id
-DELETE /api/comments/:comment_id
+PATCH /api/comments/:comment_id x
+DELETE /api/comments/:comment_id x
 
-GET /api
+GET /api x
 ```
 
 ---
 
-### Route Requirements
+### Route Requirements x
 
 _**All of your endpoints should send the below responses in an object, with a key name of what it is that being sent. E.g.**_
 
@@ -171,7 +171,7 @@ _**All of your endpoints should send the below responses in an object, with a ke
 GET /api/topics
 ```
 
-#### Responds with
+#### Responds with x
 
 - an array of topic objects, each of which should have the following properties:
   - `slug`
@@ -183,7 +183,7 @@ GET /api/topics
 GET /api/users/:username
 ```
 
-#### Responds with
+#### Responds with x
 
 - a user object which should have the following properties:
   - `username`
@@ -196,7 +196,7 @@ GET /api/users/:username
 GET /api/articles/:article_id
 ```
 
-#### Responds with
+#### Responds with x
 
 - an article object, which should have the following properties:
 
@@ -215,7 +215,7 @@ GET /api/articles/:article_id
 PATCH /api/articles/:article_id
 ```
 
-#### Request body accepts
+#### Request body accepts //add some more tests
 
 - an object in the form `{ inc_votes: newVote }`
 
@@ -227,7 +227,7 @@ PATCH /api/articles/:article_id
 
   `{ inc_votes : -100 }` would decrement the current article's vote property by 100
 
-#### Responds with
+#### Responds with x
 
 - the updated article
 
@@ -237,13 +237,13 @@ PATCH /api/articles/:article_id
 POST /api/articles/:article_id/comments
 ```
 
-#### Request body accepts
+#### Request body accepts x
 
 - an object with the following properties:
   - `username`
   - `body`
 
-#### Responds with
+#### Responds with x
 
 - the posted comment
 
@@ -253,7 +253,7 @@ POST /api/articles/:article_id/comments
 GET /api/articles/:article_id/comments
 ```
 
-#### Responds with
+#### Responds with x
 
 - an array of comments for the given `article_id` of which each comment should have the following properties:
   - `comment_id`
@@ -262,10 +262,10 @@ GET /api/articles/:article_id/comments
   - `author` which is the `username` from the users table
   - `body`
 
-#### Accepts queries
+#### Accepts queries x
 
-- `sort_by`, which sorts the comments by any valid column (defaults to created_at)
-- `order`, which can be set to `asc` or `desc` for ascending or descending (defaults to descending)
+- `sort_by`, which sorts the comments by any valid column (defaults to created_at)x
+- `order`, which can be set to `asc` or `desc` for ascending or descending (defaults to descending)x
 
 ---
 

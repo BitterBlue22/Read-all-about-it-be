@@ -29,6 +29,3 @@ exports.seed = function (knex) {
     });
   });
 };
-/*  LockError {
-      name: 'MigrationLocked',
-      message: 'Migration table is already locked'*/ //not sure what this is?
