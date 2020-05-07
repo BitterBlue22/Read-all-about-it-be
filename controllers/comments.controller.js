@@ -1,6 +1,7 @@
 const {
   updateCommentById,
   removeCommentById,
+  updateCommentVotesById,
 } = require("../models/comments.model.js");
 
 exports.patchCommentById = (req, res, next) => {
@@ -18,6 +19,20 @@ exports.patchCommentById = (req, res, next) => {
     });
 };
 
+exports.patchCommentVotesById = (req, res, next) => {
+  // console.log("inside comments controller");
+
+  const { body } = req;
+  const { comment_id } = req.params;
+
+  updateCommentVotesById(comment_id, body)
+    .then((comment) => {
+      res.status(201).send({ "updated comment": comment });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
 exports.deleteCommentById = (req, res, next) => {
   // console.log("inside comments controller");
   const { comment_id } = req.params;

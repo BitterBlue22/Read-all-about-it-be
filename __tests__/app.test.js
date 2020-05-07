@@ -8,7 +8,7 @@ beforeEach(() => connection.seed.run());
 afterAll(() => connection.destroy());
 
 describe("/api", () => {
-  test("return 200 status with msg of api working", () => {
+  test("should return 200 with msg of api working", () => {
     return request(app)
       .get("/api")
       .expect(200)
@@ -338,7 +338,7 @@ describe("/api/articles", () => {
 describe("/api/comments", () => {
   describe("PATCH", () => {
     describe(":comment_id", () => {
-      test("should return a 201 status and update the comment with the given id by the provided information", () => {
+      xtest("should return a 201 status and update the comment with the given id by the provided information", () => {
         return request(app)
           .patch("/api/comments/1")
           .send({ body: "I'M CHANGING THIS TO SOMETHING NEW!" })
@@ -358,10 +358,10 @@ describe("/api/comments", () => {
             });
           });
       }); //more general patching ability, not specific to votes, allows user to updated votes and edit their comment
-      xtest("should be able to increase or decrease comment votes", () => {
+      test("should be able to increase or decrease comment votes", () => {
         return request(app)
           .patch("/api/comments/1")
-          .send(`{ inc_votes: 2 }`)
+          .send({ inc_votes: 2 })
           .expect(201)
           .then((res) => {
             expect(res.body).toEqual({
@@ -378,7 +378,7 @@ describe("/api/comments", () => {
               ],
             });
           });
-      }); //first need to figure out how to do two different types of patch requests
+      });
     });
   });
   describe("DELETE", () => {
