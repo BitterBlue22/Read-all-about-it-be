@@ -74,7 +74,7 @@ describe("formatComments", () => {
   test("returns an array", () => {
     expect(formatComments([])).toEqual([]);
   });
-  test("updateds values when passed a key, value and refObj ", () => {
+  test("updates values when passed an array input and a ref object ", () => {
     const input = [
       {
         body:
@@ -92,7 +92,6 @@ describe("formatComments", () => {
         body:
           "The beautiful thing about treasure is that it exists. Got to find out what kind of sheets these are; not cotton, not rayon, silky.",
         comment_votes: 14,
-        // article_id: 1,
         created_at: new Date(1479818163389),
       },
     ];
