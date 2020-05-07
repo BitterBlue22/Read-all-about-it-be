@@ -3,7 +3,16 @@ const {
   updateArticlesById,
   fetchCommentsByArticle,
   addCommentByArticle,
+  fetchAllArticles,
 } = require("../models/articles.model");
+
+exports.getAllArticles = (req, res, next) => {
+  fetchAllArticles()
+    .then((articles) => {
+      res.status(200).send({ articles: articles });
+    })
+    .catch((err) => next(err));
+};
 
 exports.getArticlesById = (req, res, next) => {
   // console.log("inside articles controller");

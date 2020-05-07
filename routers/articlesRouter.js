@@ -4,10 +4,11 @@ const {
   patchArticlesById,
   getCommentsByArticle,
   postCommentsByArticle,
+  getAllArticles,
 } = require("../controllers/articles.controller");
 const { handle405s } = require("../controllers/errorHandler");
 
-articlesRouter.route("/").all(handle405s);
+articlesRouter.route("/").get(getAllArticles).all(handle405s);
 articlesRouter
   .route("/:article_id")
   .get(getArticlesById)
