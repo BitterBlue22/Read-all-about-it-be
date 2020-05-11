@@ -11,7 +11,7 @@ exports.formatDates = (list) => {
 exports.makeRefObj = (list) => {
   const lookupObj = {};
   list.forEach((item) => {
-    lookupObj[item.article_id] = item.title;
+    lookupObj[item.title] = item.article_id;
   });
   return lookupObj;
 };
@@ -21,14 +21,10 @@ exports.formatComments = (comments, articleRef) => {
     const { belongs_to, created_by, ...restOfKeys } = item;
 
     const newObj = {
+      author: created_by,
+      article_id: articleRef[belongs_to],
       ...restOfKeys,
     };
-    for (key in articleRef) {
-      if (articleRef[key] === belongs_to) {
-        newObj.article_id = key;
-        newObj.author = created_by;
-      }
-    }
     return newObj;
   });
 
