@@ -5,14 +5,12 @@ const {
 } = require("../models/comments.model.js");
 
 exports.patchCommentById = (req, res, next) => {
-  // console.log("inside comments controller");
-
   const { body } = req;
   const { comment_id } = req.params;
 
-  updateCommentById(comment_id, body)
+  updateCommentById(comment_id, body) // ! not currently in use
     .then((comment) => {
-      res.status(201).send({ "updated comment": comment });
+      res.status(201).send({ comment: comment[0] });
     })
     .catch((err) => {
       next(err);
@@ -20,21 +18,18 @@ exports.patchCommentById = (req, res, next) => {
 };
 
 exports.patchCommentVotesById = (req, res, next) => {
-  // console.log("inside comments controller");
-
   const { body } = req;
   const { comment_id } = req.params;
 
   updateCommentVotesById(comment_id, body)
     .then((comment) => {
-      res.status(201).send({ "updated comment": comment });
+      res.status(201).send({ comment: comment[0] });
     })
     .catch((err) => {
       next(err);
     });
 };
 exports.deleteCommentById = (req, res, next) => {
-  // console.log("inside comments controller");
   const { comment_id } = req.params;
   removeCommentById(comment_id)
     .then(() => {

@@ -8,7 +8,7 @@ beforeEach(() => connection.seed.run());
 afterAll(() => connection.destroy());
 
 describe("/api", () => {
-  test("should return 200 with msg of api working", () => {
+  test("should return 200 with msg that the api is responding", () => {
     return request(app)
       .get("/api")
       .expect(200)
@@ -29,7 +29,7 @@ describe("/api", () => {
 describe("/api/topics", () => {
   test("should return 404 if given an invalid sub-path ", () => {
     return request(app)
-      .get("/api/topics/notapath")
+      .get("/api/misspelled")
       .expect(404)
       .then((res) => {
         expect(res.body.msg).toEqual("path not found");
@@ -86,20 +86,18 @@ describe("/api/users", () => {
           .expect(200)
           .then((res) => {
             expect(res.body).toEqual({
-              user: [
-                {
-                  username: "butter_bridge",
-                  name: "jonny",
-                  avatar_url:
-                    "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg",
-                },
-              ],
+              user: {
+                username: "butter_bridge",
+                name: "jonny",
+                avatar_url:
+                  "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg",
+              },
             });
           });
       });
-      test("should return 404 if given an invalid username", () => {
+      test("should return 404 if given an non-existent username", () => {
         return request(app)
-          .get("/api/topics/notapuser")
+          .get("/api/topics/notauser")
           .expect(404)
           .then((res) => {
             expect(res.body.msg).toEqual("path not found");
@@ -111,14 +109,6 @@ describe("/api/users", () => {
 
 describe("/api/articles", () => {
   describe("GET", () => {
-    test("should return 400 if given an invalid data type for id ", () => {
-      return request(app)
-        .get("/api/articles/notanint")
-        .expect(400)
-        .then((res) => {
-          expect(res.body.msg).toEqual("bad request");
-        });
-    });
     test("should return an array of all articles", () => {
       return request(app)
         .get("/api/articles")
@@ -136,90 +126,153 @@ describe("/api/articles", () => {
           });
         });
     });
-    test("should default sort by date descending ", () => {
+    test("should return 404 for an invalid path", () => {
       return request(app)
-        .get("/api/articles")
-        .expect(200)
-        .then((result) => {
-          expect(result.body.articles[0]).toEqual({
-            article_id: 1,
-            title: "Living in the shadow of a great man",
-            body: "I find this existence challenging",
-            votes: 100,
-            topic: "mitch",
-            author: "butter_bridge",
-            created_at: "2018-11-15T12:21:54.171Z",
-            comment_count: "13",
-          });
-          expect(result.body.articles[11]).toEqual({
-            article_id: 12,
-            title: "Moustache",
-            body: "Have you seen the size of that thing?",
-            votes: 0,
-            topic: "mitch",
-            author: "butter_bridge",
-            created_at: "1974-11-26T12:21:54.171Z",
-            comment_count: "0",
-          });
+        .get("/api/misspelled")
+        .expect(404)
+        .then((res) => {
+          expect(res.body.msg).toEqual("path not found");
         });
     });
-    test("should be able to sort by chosen column in chosen order ", () => {
-      return request(app)
-        .get("/api/articles?sort_by=votes")
-        .expect(200)
-        .then((result) => {
-          expect(result.body.articles[0]).toEqual({
-            article_id: 1,
-            title: "Living in the shadow of a great man",
-            body: "I find this existence challenging",
-            votes: 100,
-            topic: "mitch",
-            author: "butter_bridge",
-            created_at: "2018-11-15T12:21:54.171Z",
-            comment_count: "13",
-          });
-        });
-    });
-    test("should filter results by author", () => {
-      return request(app)
-        .get("/api/articles?author=icellusedkars")
-        .expect(200)
-        .then((result) => {
-          result.body.articles.forEach((article) => {
-            expect(article.author).toEqual("icellusedkars");
-          });
-        });
-    });
-    test("should filter results by topic", () => {
-      return request(app)
-        .get("/api/articles?topic=mitch")
-        .expect(200)
-        .then((result) => {
-          result.body.articles.forEach((article) => {
-            expect(article.topic).toEqual("mitch");
-          });
-        });
-    });
-    describe(":article_id", () => {
-      test("should return a 200 status and the article by given id", () => {
+    describe("queries", () => {
+      test("should default sort by date descending ", () => {
         return request(app)
-          .get("/api/articles/1")
+          .get("/api/articles")
           .expect(200)
-          .then((res) => {
-            expect(res.body).toEqual({
-              article: [
-                {
-                  article_id: 1,
-                  title: "Living in the shadow of a great man",
-                  body: "I find this existence challenging",
-                  votes: 100,
-                  topic: "mitch",
-                  author: "butter_bridge",
-                  created_at: "2018-11-15T12:21:54.171Z",
-                  comment_count: "13",
-                },
-              ],
+          .then((result) => {
+            expect(result.body.articles[0]).toEqual({
+              article_id: 1,
+              title: "Living in the shadow of a great man",
+              body: "I find this existence challenging",
+              votes: 100,
+              topic: "mitch",
+              author: "butter_bridge",
+              created_at: "2018-11-15T12:21:54.171Z",
+              comment_count: "13",
             });
+            expect(result.body.articles[11]).toEqual({
+              article_id: 12,
+              title: "Moustache",
+              body: "Have you seen the size of that thing?",
+              votes: 0,
+              topic: "mitch",
+              author: "butter_bridge",
+              created_at: "1974-11-26T12:21:54.171Z",
+              comment_count: "0",
+            });
+          });
+      });
+      test("should be able to sort by chosen column in chosen order ", () => {
+        return request(app)
+          .get("/api/articles?sort_by=votes")
+          .expect(200)
+          .then((result) => {
+            expect(result.body.articles[0]).toEqual({
+              article_id: 1,
+              title: "Living in the shadow of a great man",
+              body: "I find this existence challenging",
+              votes: 100,
+              topic: "mitch",
+              author: "butter_bridge",
+              created_at: "2018-11-15T12:21:54.171Z",
+              comment_count: "13",
+            });
+          });
+      });
+      test("should filter results by author", () => {
+        return request(app)
+          .get("/api/articles?author=icellusedkars")
+          .expect(200)
+          .then((result) => {
+            result.body.articles.forEach((article) => {
+              expect(article.author).toEqual("icellusedkars");
+            });
+          });
+      });
+      test("should return a 200 and empty array if author has no articles", () => {
+        return request(app)
+          .get("/api/articles?author=lurker")
+          .expect(200)
+          .then((result) => {
+            result.body.articles.forEach((article) => {
+              expect(article.body).toEqual({ articles: [] });
+            });
+          });
+      });
+      test("should filter results by topic", () => {
+        return request(app)
+          .get("/api/articles?topic=mitch")
+          .expect(200)
+          .then((result) => {
+            result.body.articles.forEach((article) => {
+              expect(article.topic).toEqual("mitch");
+            });
+          });
+      });
+
+      describe("errors", () => {
+        test("should return a 400 status when given a non-existent column", () => {
+          return request(app)
+            .get("/api/articles?sort_by=not-a-column")
+            .expect(400)
+            .then((res) => {
+              expect(res.body.msg).toEqual("bad request");
+            });
+        });
+        test("should return a 404 status when given a non-existent topic", () => {
+          return request(app)
+            .get("/api/articles?topic=not-a-topic")
+            .expect(404)
+            .then((res) => {
+              expect(res.body.msg).toEqual("topic not found");
+            });
+        });
+        test("should return a 404 status when given a non-existent author", () => {
+          return request(app)
+            .get("/api/articles?author=not-an-author")
+            .expect(404)
+            .then((res) => {
+              expect(res.body.msg).toEqual("user not found");
+            });
+        });
+      });
+    });
+  });
+  describe(":article_id", () => {
+    test("should return a 200 status and the article by given id", () => {
+      return request(app)
+        .get("/api/articles/1")
+        .expect(200)
+        .then((res) => {
+          expect(res.body).toEqual({
+            article: {
+              article_id: 1,
+              title: "Living in the shadow of a great man",
+              body: "I find this existence challenging",
+              votes: 100,
+              topic: "mitch",
+              author: "butter_bridge",
+              created_at: "2018-11-15T12:21:54.171Z",
+              comment_count: "13",
+            },
+          });
+        });
+    });
+    describe("errors", () => {
+      test("should return 404 if given a non-existent id", () => {
+        return request(app)
+          .get("/api/articles/9999")
+          .expect(404)
+          .then((res) => {
+            expect(res.body.msg).toEqual("not found");
+          });
+      });
+      test("should return 400 if given an invalid data type for id ", () => {
+        return request(app)
+          .get("/api/articles/notanint")
+          .expect(400)
+          .then((res) => {
+            expect(res.body.msg).toEqual("bad request");
           });
       });
     });
@@ -250,6 +303,14 @@ describe("/api/articles", () => {
                 },
               ],
             });
+          });
+      });
+      test("should return status 200 and empty array if existing article has no comments", () => {
+        return request(app)
+          .get("/api/articles/2/comments")
+          .expect(200)
+          .then((res) => {
+            expect(res.body).toEqual({ comments: [] });
           });
       });
       test("should accept orderBy query defaulting to desc unless specified otherwise", () => {
@@ -293,17 +354,19 @@ describe("/api/articles", () => {
           .send({ body: "I'M CHANGING THIS TO SOMETHING NEW!" })
           .expect(201)
           .then((res) => {
-            expect(res.body).toEqual([
-              {
-                article_id: 1,
-                title: "Living in the shadow of a great man",
-                body: "I'M CHANGING THIS TO SOMETHING NEW!",
-                votes: 100,
-                topic: "mitch",
-                author: "butter_bridge",
-                created_at: "2018-11-15T12:21:54.171Z",
-              },
-            ]);
+            expect(res.body).toEqual({
+              article: [
+                {
+                  article_id: 1,
+                  title: "Living in the shadow of a great man",
+                  body: "I'M CHANGING THIS TO SOMETHING NEW!",
+                  votes: 100,
+                  topic: "mitch",
+                  author: "butter_bridge",
+                  created_at: "2018-11-15T12:21:54.171Z",
+                },
+              ],
+            });
           });
       });
     });
@@ -320,7 +383,7 @@ describe("/api/articles", () => {
             })
             .expect(201)
             .then((result) => {
-              result.body.new_comment.forEach((comment) => {
+              result.body.comment.forEach((comment) => {
                 expect(comment).toHaveProperty("comment_id");
                 expect(comment).toHaveProperty("author");
                 expect(comment).toHaveProperty("article_id");
@@ -338,44 +401,22 @@ describe("/api/articles", () => {
 describe("/api/comments", () => {
   describe("PATCH", () => {
     describe(":comment_id", () => {
-      xtest("should return a 201 status and update the comment with the given id by the provided information", () => {
-        return request(app)
-          .patch("/api/comments/1")
-          .send({ body: "I'M CHANGING THIS TO SOMETHING NEW!" })
-          .expect(201)
-          .then((res) => {
-            expect(res.body).toEqual({
-              "updated comment": [
-                {
-                  comment_id: 1,
-                  body: "I'M CHANGING THIS TO SOMETHING NEW!",
-                  article_id: 9,
-                  author: "butter_bridge",
-                  votes: 16,
-                  created_at: "2017-11-22T12:36:03.389Z",
-                },
-              ],
-            });
-          });
-      }); //more general patching ability, not specific to votes, allows user to updated votes and edit their comment
-      test("should be able to increase or decrease comment votes", () => {
+      test("should return a 201 status and increase or decrease comment votes", () => {
         return request(app)
           .patch("/api/comments/1")
           .send({ inc_votes: 2 })
           .expect(201)
           .then((res) => {
             expect(res.body).toEqual({
-              "updated comment": [
-                {
-                  comment_id: 1,
-                  body:
-                    "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
-                  article_id: 9,
-                  author: "butter_bridge",
-                  votes: 18,
-                  created_at: "2017-11-22T12:36:03.389Z",
-                },
-              ],
+              comment: {
+                comment_id: 1,
+                body:
+                  "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
+                article_id: 9,
+                author: "butter_bridge",
+                votes: 18,
+                created_at: "2017-11-22T12:36:03.389Z",
+              },
             });
           });
       });
@@ -383,8 +424,16 @@ describe("/api/comments", () => {
   });
   describe("DELETE", () => {
     describe(":comment_id", () => {
-      it("should delete comment by id", async () => {
+      test("should delete comment by id", async () => {
         return request(app).del("/api/comments/3").expect(204);
+      });
+      test("should return 400 if given an invalid data type for id ", () => {
+        return request(app)
+          .del("/api/comments/notanint")
+          .expect(400)
+          .then((res) => {
+            expect(res.body.msg).toEqual("bad request");
+          });
       });
     });
   });

@@ -6,7 +6,7 @@ exports.up = function (knex) {
     article.integer("votes").defaultTo(0);
     article.string("topic").notNullable();
     article.foreign("topic").references("slug").inTable("topics");
-    article.string("author").notNullable();
+    article.string("author");
     article
       .foreign("author")
       .references("username")

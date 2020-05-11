@@ -1,5 +1,9 @@
-exports.send404 = (req, res, next) => {
-  res.status(404).send({ msg: "path not found" });
+exports.handlePSQLErrors = (err, req, res, next) => {
+  const codes400 = ["42601", "22P02", "42702", "42703"];
+
+  if (codes400.includes(err.code)) {
+    res.status(400).send({ msg: "bad request" });
+  } else next(err);
 };
 exports.handleCustomErrors = (err, req, res, next) => {
   if (err.status) {
@@ -8,14 +12,10 @@ exports.handleCustomErrors = (err, req, res, next) => {
     next(err);
   }
 };
-exports.handlePSQLErrors = (err, req, res, next) => {
-  const codes400 = ["42601", "22P02", "42702", "42703"];
 
-  if (codes400.includes(err.code)) {
-    res.status(400).send({ msg: "bad request" });
-  } else next(err);
+exports.send404 = (req, res, next) => {
+  res.status(404).send({ msg: "path not found" });
 };
-
 exports.handle405s = (req, res, next) => {
   res.status(405).send({ msg: "invalid method" });
 };

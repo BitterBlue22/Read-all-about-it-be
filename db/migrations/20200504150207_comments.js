@@ -1,7 +1,7 @@
 exports.up = function (knex) {
   return knex.schema.createTable("comments", (comment) => {
     comment.increments("comment_id").primary();
-    comment.string("author").notNullable();
+    comment.string("author");
     comment.foreign("author").references("username").inTable("users");
     comment.integer("article_id");
     comment

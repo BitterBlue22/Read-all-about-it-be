@@ -1,7 +1,6 @@
 const connection = require("../db/connection");
 
 exports.fetchArticlesById = (id) => {
-  // console.log("inside articles model");
   return connection
     .select("articles.*")
     .count("comments.article_id as comment_count")
@@ -10,12 +9,13 @@ exports.fetchArticlesById = (id) => {
     .leftJoin("comments", "articles.article_id", "=", "comments.article_id")
     .groupBy("articles.article_id")
     .then((article) => {
+      if (article.length === 0)
+        return Promise.reject({ status: 404, msg: "not found" });
       return article;
     });
 };
 
 exports.updateArticlesById = (id, updatedInfo) => {
-  // console.log("inside articles model");
   return connection("articles")
     .returning("*")
     .where("article_id", id)
@@ -26,7 +26,6 @@ exports.updateArticlesById = (id, updatedInfo) => {
 };
 
 exports.fetchCommentsByArticle = (id, order, sort_by) => {
-  // console.log("inside articles model");
   return connection
     .select("*")
     .from("comments")
@@ -39,7 +38,6 @@ exports.fetchCommentsByArticle = (id, order, sort_by) => {
 };
 
 exports.addCommentByArticle = (id, comment) => {
-  // console.log("inside articles model");
   const { body } = comment;
   const newComment = {
     article_id: id,
@@ -51,8 +49,8 @@ exports.addCommentByArticle = (id, comment) => {
     .insert(newComment)
     .where("article_id", id)
     .returning("*")
-    .then((post) => {
-      return post;
+    .then((comment) => {
+      return comment;
     });
 };
 
@@ -68,7 +66,9 @@ exports.fetchAllArticles = (sort_by, order, author, topic) => {
       if (topic) query.where("articles.topic", topic);
     })
     .groupBy("articles.article_id")
-    .then((article) => {
-      return article;
+    .then((articles) => {
+      // if (articles.length === 0)
+      //   return Promise.reject({ status: 404, msg: "not found" });
+      return articles;
     });
 };
