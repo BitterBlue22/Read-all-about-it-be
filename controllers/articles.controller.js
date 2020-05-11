@@ -9,8 +9,8 @@ const { fetchUsersById } = require("../models/users.model");
 const { fetchTopicsBySlug } = require("../models/topics.model");
 
 exports.getAllArticles = (req, res, next) => {
-  const { sort_by, order, author, topic } = req.query;
-  const queries = [fetchAllArticles(sort_by, order, author, topic)];
+  const { sort_by, order, author, topic, limit } = req.query;
+  const queries = [fetchAllArticles(sort_by, order, author, topic, limit)];
   if (author) queries.push(fetchUsersById(author));
   if (topic) queries.push(fetchTopicsBySlug(topic));
   Promise.all(queries)

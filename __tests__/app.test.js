@@ -150,14 +150,14 @@ describe("/api/articles", () => {
               created_at: "2018-11-15T12:21:54.171Z",
               comment_count: "13",
             });
-            expect(result.body.articles[11]).toEqual({
-              article_id: 12,
-              title: "Moustache",
-              body: "Have you seen the size of that thing?",
+            expect(result.body.articles[9]).toEqual({
+              article_id: 10,
+              title: "Seven inspirational thought leaders from Manchester UK",
+              body: "Who are we kidding, there is only one, and it's Mitch!",
               votes: 0,
               topic: "mitch",
-              author: "butter_bridge",
-              created_at: "1974-11-26T12:21:54.171Z",
+              author: "rogersop",
+              created_at: "1982-11-24T12:21:54.171Z",
               comment_count: "0",
             });
           });
@@ -209,7 +209,24 @@ describe("/api/articles", () => {
             });
           });
       });
-
+      describe("pagination", () => {
+        test("should limit the number of responses to 10 by default", () => {
+          return request(app)
+            .get("/api/articles")
+            .expect(200)
+            .then((result) => {
+              expect(result.body.articles.length).toEqual(10);
+            });
+        });
+        test("should limit the number of responses by query amount, defaulting to 10", () => {
+          return request(app)
+            .get("/api/articles?limit=5")
+            .expect(200)
+            .then((result) => {
+              expect(result.body.articles.length).toEqual(5);
+            });
+        });
+      });
       describe("errors", () => {
         test("should return a 400 status when given a non-existent column", () => {
           return request(app)

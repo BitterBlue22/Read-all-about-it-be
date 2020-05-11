@@ -54,11 +54,12 @@ exports.addCommentByArticle = (id, comment) => {
     });
 };
 
-exports.fetchAllArticles = (sort_by, order, author, topic) => {
+exports.fetchAllArticles = (sort_by, order, author, topic, limit) => {
   return connection
     .select("articles.*")
     .count("comments.article_id as comment_count")
     .from("articles")
+    .limit(limit || 10)
     .leftJoin("comments", "articles.article_id", "=", "comments.article_id")
     .orderBy(sort_by || "created_at", order || "desc")
     .modify((query) => {
