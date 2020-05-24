@@ -1,4 +1,8 @@
-const { fetchUsersById, fetchAllUsers } = require("../models/users.model.js");
+const {
+  fetchUsersById,
+  fetchAllUsers,
+  addNewUser,
+} = require("../models/users.model.js");
 
 exports.getAllUsers = (req, res, next) => {
   fetchAllUsers()
@@ -16,6 +20,16 @@ exports.getUsersById = (req, res, next) => {
   fetchUsersById(username)
     .then((user) => {
       res.status(200).send({ user: user });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+exports.postNewUser = (req, res, next) => {
+  addNewUser(req.body)
+    .then((newUser) => {
+      res.status(201).send({ user: newUser });
     })
     .catch((err) => {
       next(err);

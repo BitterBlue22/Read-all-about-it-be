@@ -8,7 +8,7 @@ beforeEach(() => connection.seed.run());
 afterAll(() => connection.destroy());
 
 describe("/api", () => {
-  test("should return 200 with msg that the api is responding", () => {
+  xtest("should return 200 with msg that the api is responding", () => {
     return request(app)
       .get("/api")
       .expect(200)
@@ -54,7 +54,7 @@ describe("/api/topics", () => {
       const invalidMethods = ["delete", "post", "patch"];
       const requests = invalidMethods.map((method) => {
         return request(app)
-        [method]("/api/topics")
+          [method]("/api/topics")
           .expect(405)
           .then((res) => {
             expect(res.body.msg).toBe("invalid method");
@@ -66,19 +66,19 @@ describe("/api/topics", () => {
 });
 
 describe("/api/users", () => {
-  describe("GET", () => {
-    test("should return a 405 status if method not allowed ", () => {
-      const invalidMethods = ["delete", "post"];
-      const requests = invalidMethods.map((method) => {
-        return request(app)
+  test("should return a 405 status if method not allowed ", () => {
+    const invalidMethods = ["delete"];
+    const requests = invalidMethods.map((method) => {
+      return request(app)
         [method]("/api/users")
-          .expect(405)
-          .then((res) => {
-            expect(res.body.msg).toBe("invalid method");
-          });
-      });
-      return Promise.all(requests);
+        .expect(405)
+        .then((res) => {
+          expect(res.body.msg).toBe("invalid method");
+        });
     });
+    return Promise.all(requests);
+  });
+  describe("GET", () => {
     test("should return 200 status and array of users", () => {
       return request(app)
         .get("/api/users")
@@ -138,6 +138,29 @@ describe("/api/users", () => {
             expect(res.body.msg).toEqual("path not found");
           });
       });
+    });
+  });
+  describe("POST", () => {
+    test("should post a new user and return new user profile", () => {
+      return request(app)
+        .post("/api/users")
+        .send({
+          username: "ZiziLoo",
+          avatar_url:
+            "https://www.hd-freewallpapers.com/latest-wallpapers/cute-parrot-pics.jpg",
+          name: "Zillian",
+        })
+        .expect(201)
+        .then(({ body }) => {
+          expect(body).toEqual({
+            user: {
+              username: "ZiziLoo",
+              avatar_url:
+                "https://www.hd-freewallpapers.com/latest-wallpapers/cute-parrot-pics.jpg",
+              name: "Zillian",
+            },
+          });
+        });
     });
   });
 });

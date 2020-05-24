@@ -20,3 +20,19 @@ exports.fetchUsersById = (id) => {
       return user[0];
     });
 };
+
+exports.addNewUser = (input) => {
+  const { username, avatar_url, name } = input;
+  const newUser = {
+    username: username,
+    avatar_url: avatar_url,
+    name: name,
+  };
+  return connection
+    .insert(newUser)
+    .into("users")
+    .returning("*")
+    .then((user) => {
+      return user[0];
+    });
+};
