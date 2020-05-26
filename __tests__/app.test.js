@@ -63,6 +63,30 @@ describe("/api/topics", () => {
       return Promise.all(requests);
     });
   });
+  describe("/articles", () => {
+    describe("POST", () => {
+      test("should post a new user and return new user profile", () => {
+        return request(app)
+          .post("/api/topics/articles")
+          .send({
+            title: "Title",
+            topic: "mitch",
+            username: "icellusedkars",
+            body: "Wow, much wow",
+          })
+          .expect(201)
+          .then(({ body: { article } }) => {
+            expect(article).toHaveProperty("article_id");
+            expect(article).toHaveProperty("author");
+            expect(article).toHaveProperty("topic");
+            expect(article).toHaveProperty("title");
+            expect(article).toHaveProperty("body");
+            expect(article).toHaveProperty("created_at");
+            expect(article).toHaveProperty("votes");
+          });
+      });
+    });
+  });
 });
 
 describe("/api/users", () => {
@@ -313,6 +337,7 @@ describe("/api/articles", () => {
       });
     });
   });
+
   describe(":article_id", () => {
     test("should return a 200 status and the article by given id", () => {
       return request(app)

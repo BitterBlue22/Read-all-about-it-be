@@ -22,3 +22,20 @@ exports.fetchTopicsBySlug = (slug) => {
       return topic;
     });
 };
+
+exports.addNewArticle = ({ title, topic, username, body }) => {
+  const newArticle = {
+    title: title,
+    topic: topic,
+    author: username,
+    body: body,
+    created_at: new Date(Date.now()),
+  };
+  return connection("articles")
+    .insert(newArticle)
+
+    .returning("*")
+    .then((article) => {
+      return article[0];
+    });
+};
