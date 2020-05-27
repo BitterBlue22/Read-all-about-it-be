@@ -45,11 +45,11 @@ exports.patchArticlesById = (req, res, next) => {
 }; //!not in use
 exports.patchArticleVotesById = (req, res, next) => {
   const { body } = req;
-  const { comment_id } = req.params;
+  const { article_id } = req.params;
 
   updateArticleVotesById(article_id, body)
     .then((article) => {
-      res.status(201).send({ article: comment[0] });
+      res.status(201).send({ article: article[0] });
     })
     .catch((err) => {
       next(err);
