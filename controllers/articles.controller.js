@@ -4,6 +4,8 @@ const {
   fetchCommentsByArticle,
   addCommentByArticle,
   fetchAllArticles,
+  addNewArticle,
+  updateArticleVotesById,
 } = require("../models/articles.model");
 const { fetchUsersById } = require("../models/users.model");
 const { fetchTopicsBySlug } = require("../models/topics.model");
@@ -36,6 +38,18 @@ exports.patchArticlesById = (req, res, next) => {
   updateArticlesById(article_id, body)
     .then((article) => {
       res.status(201).send({ article: article });
+    })
+    .catch((err) => {
+      next(err);
+    });
+}; //!not in use
+exports.patchArticleVotesById = (req, res, next) => {
+  const { body } = req;
+  const { comment_id } = req.params;
+
+  updateArticleVotesById(article_id, body)
+    .then((article) => {
+      res.status(201).send({ article: comment[0] });
     })
     .catch((err) => {
       next(err);

@@ -68,8 +68,20 @@ exports.fetchAllArticles = (sort_by, order, author, topic, limit) => {
     })
     .groupBy("articles.article_id")
     .then((articles) => {
-      // if (articles.length === 0)
-      //   return Promise.reject({ status: 404, msg: "not found" });
       return articles;
+    });
+};
+
+exports.updateArticleVotesById = (id, updatedInfo) => {
+  const { inc_votes } = updatedInfo;
+
+  return connection("articles")
+    .returning("*")
+    .where("article_id", id)
+
+    .increment("votes", inc_votes)
+
+    .then((updated) => {
+      return updated;
     });
 };
