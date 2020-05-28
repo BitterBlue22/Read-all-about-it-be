@@ -39,3 +39,16 @@ exports.addNewArticle = ({ title, topic, username, body }) => {
       return article[0];
     });
 };
+
+exports.addNewTopic = ({ slug, description }) => {
+  const newTopic = {
+    slug: slug,
+    description: description,
+  };
+  return connection("topics")
+    .insert(newTopic)
+    .returning("*")
+    .then((topic) => {
+      return topic[0];
+    });
+};
