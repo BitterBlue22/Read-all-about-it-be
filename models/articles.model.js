@@ -38,12 +38,14 @@ exports.fetchCommentsByArticle = (id, order, sort_by) => {
 };
 
 exports.addCommentByArticle = (id, comment) => {
-  const { body } = comment;
+  const { body, username } = comment;
+
   const newComment = {
     article_id: id,
     body: body,
     created_at: new Date(Date.now()),
     votes: 0,
+    author: username,
   };
   return connection("comments")
     .insert(newComment)

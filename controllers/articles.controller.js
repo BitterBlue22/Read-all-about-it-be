@@ -73,7 +73,7 @@ exports.postCommentsByArticle = (req, res, next) => {
 
   addCommentByArticle(article_id, body)
     .then((comment) => {
-      comment[0].author = body.username;
+      console.log(comment);
       res.status(201).send({ comment: comment });
     })
     .catch((err) => {
