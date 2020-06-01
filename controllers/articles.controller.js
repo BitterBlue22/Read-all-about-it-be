@@ -80,3 +80,15 @@ exports.postCommentsByArticle = (req, res, next) => {
       next(err);
     });
 };
+
+exports.postNewArticle = (req, res, next) => {
+  const { body } = req;
+
+  addNewArticle(body)
+    .then((article) => {
+      res.status(201).send({ article: article });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
