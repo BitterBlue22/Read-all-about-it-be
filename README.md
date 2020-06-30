@@ -47,10 +47,11 @@ tests to GET user by id on the path /api/users/:user_id
 
 ## Built With
 
-[Javascript][postgresql](https://www.postgresql.org/)
-[Express](https://expressjs.com/)
-[Knex.js](http://knexjs.org/)
-[Jest](https://jestjs.io/)
+- [Javascript]
+- [postgresql](https://www.postgresql.org/)
+- [Express](https://expressjs.com/)
+- [Knex.js](http://knexjs.org/)
+- [Jest](https://jestjs.io/)
 
 ## Versioning
 
